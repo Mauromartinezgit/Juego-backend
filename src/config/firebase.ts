@@ -1,13 +1,27 @@
 import admin from 'firebase-admin';
-import serviceAccount from '../../serviceAccountKey.json'; // Asegúrate de que esta ruta sea correcta
+import dotenv from 'dotenv';
 
-// Inicializar Firebase
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
-  });
+dotenv.config();
+
+// En producción, usar variables de entorno
+// En desarrollo, usar archivo local
+let credential;
+
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  // Producción (Render)
+  credential = admin.credential.cert(
+    JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+  );
+} else {
+  // Desarrollo local
+  const serviceAccount = require('../../serviceAccountKey.json');
+  credential = admin.credential.cert(serviceAccount);
 }
 
-const db = admin.firestore();
+admin.initializeApp({
+  credential: credential,
+  databaseURL: process.env.FIREBASE_DATABASE_URL
+});
 
-export { db };
+export const db = admin.firestore();
+export default admin;

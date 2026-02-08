@@ -104,7 +104,7 @@ La documentación completa de la API está disponible en Postman. Puedes importa
 
 El proyecto está desplegado en Render:
 
-**Link:** *(Se agregará después del deploy)*
+**Link: **Link:** https://juego-backend-5uex.onrender.com
 
 ### Cómo desplegar en Render:
 

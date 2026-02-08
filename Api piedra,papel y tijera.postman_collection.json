@@ -1,0 +1,116 @@
+{
+  "info": {
+    "_postman_id": "5afe0bcc-c963-4278-a6fd-7c579ad066e6",
+    "name": "Api piedra,papel y tijera",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52118882",
+    "_collection_link": "https://go.postman.co/collection/52118882-5afe0bcc-c963-4278-a6fd-7c579ad066e6?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Ver Puntajes de Sala",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/gamerooms/1840a8bb-b6e2-41ae-88d5-403307987818/scores",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "gamerooms",
+            "1840a8bb-b6e2-41ae-88d5-403307987818",
+            "scores"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "jugar partida",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"roomId\": \"1840a8bb-b6e2-41ae-88d5-403307987818\",\r\n  \"player1Id\": \"player1\",\r\n  \"player1Name\": \"Juan\",\r\n  \"player1Choice\": \"piedra\",\r\n  \"player2Id\": \"player2\",\r\n  \"player2Name\": \"María\",\r\n  \"player2Choice\": \"tijera\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/games/play",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "games",
+            "play"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "crear sala",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n     \"name\": \"Sala de prueba\"\r\n   }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/gamerooms",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "gamerooms"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ver historial de partidas",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Ver salas por id",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Listar las salas",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}

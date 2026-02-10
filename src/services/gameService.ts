@@ -21,6 +21,7 @@ export class GameService {
 
   // Obtener un gameroom por ID
   async getGameRoom(roomId: string): Promise<GameRoom | null> {
+    console.log(`Obteniendo sala con ID: ${roomId}`);
     const doc = await db.collection('gamerooms').doc(roomId).get();
     if (!doc.exists) return null;
     return doc.data() as GameRoom;
@@ -53,6 +54,8 @@ export class GameService {
         players: roomData.players,
         scores: roomData.scores
       });
+      console.log(`Jugador agregado correctamente: ${JSON.stringify(player)} en la sala: ${roomId}`);
+      console.log(`Estado actualizado de la sala ${roomId}: ${JSON.stringify(roomData.players)}`);
     }
   }
 

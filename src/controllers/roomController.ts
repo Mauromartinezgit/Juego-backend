@@ -71,6 +71,8 @@ export class RoomController {
       const { roomId } = req.params;
 
       const status = await gameService.getRoomStatus(roomId);
+      console.log('Estado de la sala:', status); // Log para verificar el estado de la sala
+
       res.json(status);
     } catch (error: any) {
       res.status(404).json({ error: error.message || 'Error al obtener el estado' });

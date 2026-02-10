@@ -56,6 +56,8 @@ export class GameService {
       });
       console.log(`Jugador agregado correctamente: ${JSON.stringify(player)} en la sala: ${roomId}`);
       console.log(`Estado actualizado de la sala ${roomId}: ${JSON.stringify(roomData.players)}`);
+    } else {
+      console.log(`El jugador ya existe en la sala: ${roomId}`);
     }
   }
 

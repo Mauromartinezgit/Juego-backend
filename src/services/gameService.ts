@@ -148,10 +148,6 @@ export class GameService {
     return room.scores;
   }
 
-  // ==========================================
-  // MÉTODOS PARA ENDPOINTS DEL FRONTEND
-  // ==========================================
-
   /**
    * Crear sala y registrar jugador (signup)
    */
@@ -205,5 +201,22 @@ export class GameService {
       .get();
     
     return snapshot.docs.map(doc => doc.data());
+  }
+
+  /**
+   * Obtener estado de la sala (para polling)
+   */
+  async getRoomStatus(roomId: string): Promise<{ roomCode: string; players: Player[]; isReady: boolean }> {
+    const room = await this.getGameRoom(roomId);
+
+    if (!room) {
+      throw new Error('Sala no encontrada');
+    }
+
+    return {
+      roomCode: room.id,
+      players: room.players,
+      isReady: room.players.length >= 2
+    };
   }
 }

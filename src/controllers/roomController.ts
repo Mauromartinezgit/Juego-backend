@@ -64,4 +64,16 @@ export class RoomController {
       res.status(500).json({ error: 'Error al obtener la sala' });
     }
   }
+  
+  // GET /rooms/:roomId/status - Obtener estado de la sala
+  async getRoomStatus(req: Request, res: Response) {
+    try {
+      const { roomId } = req.params;
+
+      const status = await gameService.getRoomStatus(roomId);
+      res.json(status);
+    } catch (error: any) {
+      res.status(404).json({ error: error.message || 'Error al obtener el estado' });
+    }
+  }
 }

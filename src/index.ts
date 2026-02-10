@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { db } from './config/firebase';
 import gameRoutes from './routes/gameRoutes';
+import roomRoutes from './routes/roomRoutes';
 
 dotenv.config();
 
@@ -44,8 +45,9 @@ app.get('/test-firebase', async (req, res) => {
 
 // Rutas de la API
 app.use('/api', gameRoutes);
+app.use('/', roomRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:3000`);
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });

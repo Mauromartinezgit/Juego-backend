@@ -147,4 +147,63 @@ export class GameService {
     if (!room) throw new Error('Room no encontrado');
     return room.scores;
   }
+
+  // ==========================================
+  // MÉTODOS PARA ENDPOINTS DEL FRONTEND
+  // ==========================================
+
+  /**
+   * Crear sala y registrar jugador (signup)
+   */
+  async signup(playerName: string): Promise<{ roomId: string; playerId: string }> {
+    const roomId = uuidv4();
+    const playerId = uuidv4();
+    
+    const gameRoom: GameRoom = {
+      id: roomId,
+      name: `Sala de ${playerName}`,
+      createdAt: Date.now(),
+      players: [{ id: playerId, name: playerName }],
+      scores: { [playerId]: 0 }
+    };
+
+    await db.collection('gamerooms').doc(roomId).set(gameRoom);
+    
+    return { roomId, playerId };
+  }
+
+  /**
+   * Unirse a una sala existente
+   */
+  async joinRoom(roomId: string, playerName: string): Promise<{ playerId: string }> {
+    const playerId = uuidv4();
+    const player: Player = { id: playerId, name: playerName };
+    
+    await this.addPlayerToRoom(roomId, player);
+    
+    return { playerId };
+  }
+
+  /**
+   * Guardar jugada de un jugador
+   */
+  async savePlay(roomId: string, playerName: string, play: Choice): Promise<void> {
+    await db.collection('plays').doc(`${roomId}_${playerName}`).set({
+      roomId,
+      playerName,
+      play,
+      timestamp: Date.now()
+    });
+  }
+
+  /**
+   * Obtener jugadas de una sala
+   */
+  async getPlays(roomId: string): Promise<any[]> {
+    const snapshot = await db.collection('plays')
+      .where('roomId', '==', roomId)
+      .get();
+    
+    return snapshot.docs.map(doc => doc.data());
+  }
 }

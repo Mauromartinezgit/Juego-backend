@@ -1,59 +1,22 @@
 import { Router } from 'express';
-import { db } from '../config/firebase';
-import * as admin from 'firebase-admin';
+import { RoomController } from '../controllers/roomController';
 
 const router = Router();
-// Crear sala
-router.post('/create', async (_req, res) => {
-  try {
-    const roomRef = db.collection('rooms').doc();
-    await roomRef.set({
-      createdAt: Date.now(),
-      players: []
-    });
+const roomController = new RoomController();
 
-    res.json({
-      success: true,
-      roomId: roomRef.id
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, error });
-  }
-});
+// POST /signup - Crear sala
+router.post('/signup', (req, res) => roomController.signup(req, res));
 
-// Unirse a sala
-router.post('/join', async (req, res) => {
-  const { roomId, player } = req.body;
+// POST /rooms/:roomId/join - Unirse a sala
+router.post('/rooms/:roomId/join', (req, res) => roomController.joinRoom(req, res));
 
-  if (!roomId || !player) {
-    return res.status(400).json({
-      success: false,
-      message: 'roomId y player requeridos'
-    });
-  }
+// POST /rooms/:roomId/play - Guardar jugada
+router.post('/rooms/:roomId/play', (req, res) => roomController.play(req, res));
 
-  try {
-    const roomRef = db.collection('rooms').doc(roomId);
-    const roomSnap = await roomRef.get();
+// GET /rooms/:roomId - Obtener estado de la sala
+router.get('/rooms/:roomId', (req, res) => roomController.getRoom(req, res));
 
-    if (!roomSnap.exists) {
-      return res.status(404).json({
-        success: false,
-        message: 'Sala no encontrada'
-      });
-    }
-
-    await roomRef.update({
-      players: admin.firestore.FieldValue.arrayUnion(player)
-    });
-
-    res.json({
-      success: true,
-      message: 'Jugador unido'
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, error });
-  }
-});
+// GET /rooms/:roomId/status - Estado de la sala (para polling)
+router.get('/rooms/:roomId/status', (req, res) => roomController.getRoomStatus(req, res));
 
 export default router;

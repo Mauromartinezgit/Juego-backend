@@ -19,4 +19,7 @@ router.get('/rooms/:roomId', (req, res) => roomController.getRoom(req, res));
 // GET /rooms/:roomId/status - Estado de la sala (para polling)
 router.get('/rooms/:roomId/status', (req, res) => roomController.getRoomStatus(req, res));
 
+// POST /rooms/:roomId/ready - Marcar jugador como listo
+router.post('/rooms/:roomId/ready', (req, res) => roomController.setPlayerReady(req, res));
+
 export default router;

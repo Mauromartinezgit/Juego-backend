@@ -24,7 +24,8 @@ export class GameService {
       name,
       createdAt: Date.now(),
       players: [],
-      scores: {}
+      scores: {},
+      readyPlayers: []
     };
 
     await db.collection('gamerooms').doc(roomId).set(gameRoom);
@@ -169,7 +170,7 @@ export class GameService {
    * Crear sala y registrar jugador (signup)
    */
   async signup(playerName: string): Promise<{ roomId: string; playerId: string }> {
-    const roomId = this.generateRoomCode(); // Usar código corto
+    const roomId = this.generateRoomCode();
     const playerId = uuidv4();
     
     const gameRoom: GameRoom = {
@@ -177,7 +178,8 @@ export class GameService {
       name: `Sala de ${playerName}`,
       createdAt: Date.now(),
       players: [{ id: playerId, name: playerName }],
-      scores: { [playerId]: 0 }
+      scores: { [playerId]: 0 },
+      readyPlayers: []
     };
 
     await db.collection('gamerooms').doc(roomId).set(gameRoom);
@@ -233,7 +235,32 @@ export class GameService {
     return {
       roomCode: room.id,
       players: room.players,
-      isReady: room.players.length >= 2
+      isReady: room.players.length >= 2 && room.readyPlayers.length >= 2
     };
+  }
+
+  /**
+   * Marcar jugador como listo
+   */
+  async setPlayerReady(roomId: string, playerId: string): Promise<void> {
+    const roomRef = db.collection('gamerooms').doc(roomId);
+    const room = await roomRef.get();
+    
+    if (!room.exists) {
+      throw new Error('Sala no encontrada');
+    }
+
+    const roomData = room.data() as GameRoom;
+    
+    if (!roomData.readyPlayers) {
+      roomData.readyPlayers = [];
+    }
+    
+    if (!roomData.readyPlayers.includes(playerId)) {
+      roomData.readyPlayers.push(playerId);
+      await roomRef.update({
+        readyPlayers: roomData.readyPlayers
+      });
+    }
   }
 }

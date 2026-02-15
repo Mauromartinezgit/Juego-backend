@@ -65,17 +65,33 @@ export class RoomController {
     }
   }
   
-  // GET /rooms/:roomId/status - Obtener estado de la sala
   async getRoomStatus(req: Request, res: Response) {
     try {
       const { roomId } = req.params;
 
       const status = await gameService.getRoomStatus(roomId);
-      console.log('Estado de la sala:', status); // Log para verificar el estado de la sala
+      console.log('Estado de la sala:', status);
 
       res.json(status);
     } catch (error: any) {
       res.status(404).json({ error: error.message || 'Error al obtener el estado' });
+    }
+  }
+
+  // POST /rooms/:roomId/ready - Marcar jugador como listo
+  async setPlayerReady(req: Request, res: Response) {
+    try {
+      const { roomId } = req.params;
+      const { playerId } = req.body;
+      
+      if (!playerId) {
+        return res.status(400).json({ error: 'playerId es requerido' });
+      }
+      
+      await gameService.setPlayerReady(roomId, playerId);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || 'Error al marcar como listo' });
     }
   }
 }

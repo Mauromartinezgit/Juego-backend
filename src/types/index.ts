@@ -1,3 +1,5 @@
+export type Choice = 'piedra' | 'papel' | 'tijera';
+
 export interface Player {
   id: string;
   name: string;
@@ -9,6 +11,7 @@ export interface GameRoom {
   createdAt: number;
   players: Player[];
   scores: { [playerId: string]: number };
+  readyPlayers: string[]; // ← LÍNEA AGREGADA
 }
 
 export interface Game {
@@ -16,17 +19,15 @@ export interface Game {
   roomId: string;
   player1: {
     id: string;
-    choice: 'piedra' | 'papel' | 'tijera';
+    choice: Choice;
   };
   player2: {
     id: string;
-    choice: 'piedra' | 'papel' | 'tijera';
+    choice: Choice;
   };
-  winner: string | 'empate';
+  winner: string;
   playedAt: number;
 }
-
-export type Choice = 'piedra' | 'papel' | 'tijera';
 
 export interface PlayGameRequest {
   roomId: string;

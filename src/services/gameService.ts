@@ -4,6 +4,18 @@ import { v4 as uuidv4 } from 'uuid';
 
 export class GameService {
   
+  /**
+   * Generar código de sala corto (6 caracteres)
+   */
+  private generateRoomCode(): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      code += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return code;
+  }
+
   // Crear un nuevo gameroom
   async createGameRoom(name: string): Promise<GameRoom> {
     const roomId = uuidv4();
@@ -157,7 +169,7 @@ export class GameService {
    * Crear sala y registrar jugador (signup)
    */
   async signup(playerName: string): Promise<{ roomId: string; playerId: string }> {
-    const roomId = uuidv4();
+    const roomId = this.generateRoomCode(); // Usar código corto
     const playerId = uuidv4();
     
     const gameRoom: GameRoom = {

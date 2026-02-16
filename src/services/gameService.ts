@@ -232,12 +232,15 @@ export class GameService {
       throw new Error('Sala no encontrada');
     }
 
+    // Asegurar que readyPlayers exista
+    const readyPlayers = room.readyPlayers || [];
+
     return {
       roomCode: room.id,
       players: room.players,
-      isReady: room.players.length >= 2 && room.readyPlayers.length >= 2
+      isReady: room.players.length >= 2 && readyPlayers.length >= 2
     };
-  }
+}
 
   /**
    * Marcar jugador como listo

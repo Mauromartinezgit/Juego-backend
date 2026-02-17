@@ -1,116 +1,150 @@
-# API Piedra, Papel o Tijera
+# 🎮 API Piedra, Papel o Tijera - Backend
 
-Este proyecto es una API RESTful creada con Node.js, Express, TypeScript y Firebase para un juego multijugador de Piedra, Papel o Tijera.
+API RESTful creada con Node.js, Express, TypeScript y Firebase para el juego multijugador de Piedra, Papel o Tijera.
 
-## Características
+## 🚀 URL del servidor
 
-- ✅ Crear salas de juego (gamerooms)
-- ✅ Jugar partidas de Piedra, Papel o Tijera
-- ✅ Sistema de puntajes persistente
-- ✅ Historial completo de partidas
-- ✅ Base de datos en tiempo real con Firebase
+**https://juego-backend-5uex.onrender.com**
 
-## Estructura del Proyecto
+## ✅ Características
+
+- Crear salas de juego con códigos únicos de 6 caracteres
+- Sistema de jugadores listos (ambos deben confirmar para iniciar)
+- Mejor de 3 partidas sincronizado
+- Sistema de puntajes persistente
+- Historial completo de partidas
+- Base de datos en tiempo real con Firebase
+
+## 🗂️ Estructura del Proyecto
 ```
 .
 ├── src/
-│   ├── index.ts          # Punto de entrada
-│   ├── config/           # Configuración de Firebase
-│   ├── types/            # Definiciones de TypeScript
-│   ├── services/         # Lógica de negocio
-│   ├── controllers/      # Controladores de rutas
-│   └── routes/           # Definición de endpoints
-├── .env                  # Variables de entorno
+│   ├── index.ts              # Punto de entrada
+│   ├── config/               # Configuración de Firebase
+│   ├── types/                # Definiciones de TypeScript
+│   ├── services/
+│   │   └── gameService.ts    # Lógica de negocio
+│   ├── controllers/
+│   │   ├── gameController.ts # Controlador partidas
+│   │   └── roomController.ts # Controlador salas
+│   └── routes/
+│       ├── gameRoutes.ts     # Rutas de partidas
+│       └── roomRoutes.ts     # Rutas de salas
+├── .env
 ├── package.json
 └── tsconfig.json
 ```
 
-## Instalación
+## 📚 Endpoints
 
-1. Clona el repositorio:
-```bash
-   git clone <URL_DEL_REPOSITORIO>
-   cd juego-backend
-```
+### Salas de Juego (Rooms)
 
-2. Instala las dependencias:
-```bash
-   npm install
-```
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | `/signup` | Crear sala y registrar jugador |
+| POST | `/rooms/:roomId/join` | Unirse a una sala |
+| POST | `/rooms/:roomId/ready` | Marcar jugador como listo |
+| GET | `/rooms/:roomId/status` | Obtener estado de la sala |
+| GET | `/rooms/:roomId` | Obtener sala y jugadas |
+| POST | `/rooms/:roomId/play` | Guardar jugada |
 
-3. Configura las variables de entorno en `.env`:
-```
-   PORT=3000
-   FIREBASE_DATABASE_URL=https://tu-proyecto.firebaseio.com
-```
+### Ejemplos de uso
 
-4. Agrega tu archivo `serviceAccountKey.json` en la raíz del proyecto.
-
-5. Inicia el servidor:
-```bash
-   npm run dev
-```
-
-## 📚 Documentación de la API
-
-La documentación completa de la API está disponible en Postman. Puedes importar la colección desde el archivo:
-
-`API_Piedra_Papel_Tijera.postman_collection.json`
-
-### Endpoints disponibles:
-
-#### Gamerooms (Salas de Juego)
-
-- **POST** `/api/gamerooms` - Crear una sala de juego
+#### Crear sala
 ```json
-  {
-    "name": "Sala de prueba"
-  }
+POST /signup
+{
+  "name": "Juan"
+}
+// Respuesta:
+{
+  "roomId": "AB12CD",
+  "playerId": "uuid-xxx"
+}
 ```
 
-- **GET** `/api/gamerooms` - Listar todas las salas
-
-- **GET** `/api/gamerooms/:id` - Obtener sala por ID
-
-- **GET** `/api/gamerooms/:id/scores` - Ver puntajes de una sala
-
-- **GET** `/api/gamerooms/:id/history` - Ver historial de partidas
-
-#### Games (Partidas)
-
-- **POST** `/api/games/play` - Jugar una partida
+#### Unirse a sala
 ```json
-  {
-    "roomId": "abc123",
-    "player1Id": "player1",
-    "player1Name": "Juan",
-    "player1Choice": "piedra",
-    "player2Id": "player2",
-    "player2Name": "María",
-    "player2Choice": "tijera"
-  }
+POST /rooms/AB12CD/join
+{
+  "name": "María"
+}
+// Respuesta:
+{
+  "playerId": "uuid-yyy"
+}
 ```
 
-## Tecnologías utilizadas
+#### Marcar como listo
+```json
+POST /rooms/AB12CD/ready
+{
+  "playerId": "uuid-xxx"
+}
+// Respuesta:
+{
+  "success": true
+}
+```
+
+#### Estado de la sala
+```json
+GET /rooms/AB12CD/status
+// Respuesta:
+{
+  "roomCode": "AB12CD",
+  "players": [
+    { "id": "uuid-xxx", "name": "Juan" },
+    { "id": "uuid-yyy", "name": "María" }
+  ],
+  "isReady": true
+}
+```
+
+### Partidas (Legacy)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | `/api/games/play` | Jugar una partida |
+| GET | `/api/gamerooms/:id/scores` | Ver puntajes |
+| GET | `/api/gamerooms/:id/history` | Ver historial |
+
+## 🛠️ Tecnologías
 
 - **Node.js** - Entorno de ejecución
 - **Express** - Framework web
 - **TypeScript** - Tipado estático
 - **Firebase Firestore** - Base de datos NoSQL
-- **dotenv** - Gestión de variables de entorno
-- **cors** - Habilitación de CORS
+- **Render** - Deployment
 
-## 🚀 Deploy en Render
+## 📦 Instalación local
+```bash
+# Clonar el repositorio
+git clone <URL_DEL_REPOSITORIO>
+cd juego-backend
 
-El proyecto está desplegado en Render:
+# Instalar dependencias
+npm install
 
-**Link: **Link:** https://juego-backend-5uex.onrender.com
+# Configurar variables de entorno en .env
+PORT=3000
+FIREBASE_DATABASE_URL=https://tu-proyecto.firebaseio.com
 
-### Cómo desplegar en Render:
+# Agregar serviceAccountKey.json en la raíz
+
+# Iniciar en modo desarrollo
+npm run dev
+```
+
+## 🚀 Deployment en Render
 
 1. Crea una cuenta en [Render.com](https://render.com)
 2. Conecta tu repositorio de GitHub
 3. Configura las variables de entorno:
    - `FIREBASE_DATABASE_URL`
 4. Agrega tu `serviceAccountKey.json` como archivo secreto
-5. Deploy automático con cada push a main
+5. Deploy automático con cada push a `main`
+
+---
+
+Desarrollado como proyecto educativo 🎓
